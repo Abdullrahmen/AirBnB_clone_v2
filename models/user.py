@@ -9,7 +9,7 @@ from models.review import Review
 
 
 class User(BaseModel, Base):
-    """This class defines a user by various attributes"""
+    """This is the class for user"""
     __tablename__ = "users"
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
