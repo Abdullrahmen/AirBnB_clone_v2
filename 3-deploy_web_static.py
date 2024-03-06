@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """A module for web application deployment with Fabric."""
 import os
-from datetime import datetime
+import time
 from fabric.api import env, local, put, run, runs_once
 
 
@@ -12,26 +12,14 @@ env.hosts = ["54.86.148.149", "100.26.247.104"]
 @runs_once
 def do_pack():
     """Archives the static files."""
-    if not os.path.isdir("versions"):
-        os.mkdir("versions")
-    cur_time = datetime.now()
-    output = "versions/web_static_{}{}{}{}{}{}.tgz".format(
-        cur_time.year,
-        cur_time.month,
-        cur_time.day,
-        cur_time.hour,
-        cur_time.minute,
-        cur_time.second
-    )
+    timestamp = time.strftime("%Y%m%d%H%M%S")
     try:
-        print("Packing web_static to {}".format(output))
-        local("tar -cvzf {} web_static".format(output))
-        archize_size = os.stat(output).st_size
-        print("web_static packed: {} -> {} Bytes".format(output, archize_size))
-    except Exception:
-        output = None
-    return output
-
+        local("mkdir -p versions")
+        local("tar -cvzf versions/web_static_{:s}.tgz web_static/".
+              format(timestamp))
+        return ("versions/web_static_{:s}.tgz".format(timestamp))
+    except:
+        return None
 
 def do_deploy(archive_path):
     """Deploys the static files to the host servers.
