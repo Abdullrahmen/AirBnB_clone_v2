@@ -18,8 +18,9 @@ def do_pack():
         local("tar -cvzf versions/web_static_{:s}.tgz web_static/".
               format(timestamp))
         return ("versions/web_static_{:s}.tgz".format(timestamp))
-    except:
+    except Exception:
         return None
+
 
 def do_deploy(archive_path):
     """Deploys the static files to the host servers.
